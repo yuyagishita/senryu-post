@@ -1,1 +1,1 @@
-db.createCollection("post");
+db.createCollection("posts");

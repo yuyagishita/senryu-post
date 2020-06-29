@@ -3,7 +3,7 @@
 	"dockerComposeFile": [
 		"../docker-compose.yml"
 	],
-	"service": "user",
+	"service": "post",
 	"workspaceFolder": "/go/src/github.com/yu-yagishita/senryu-post",
 	"settings": {
 		"terminal.integrated.shell.linux": null,
