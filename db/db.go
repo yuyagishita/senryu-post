@@ -15,6 +15,7 @@ type Database interface {
 	Init() error
 	GetUserByName(string) (users.User, error)
 	CreateUser(*users.User) error
+	GetAll() (posts.Post, error)
 }
 
 var (

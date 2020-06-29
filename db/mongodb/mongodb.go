@@ -8,8 +8,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/yu-yagishita/senryu-post/users"
 	"github.com/yu-yagishita/senryu-post/posts"
+	"github.com/yu-yagishita/senryu-post/users"
 
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -72,7 +72,7 @@ type MongoPost struct {
 	ID         bson.ObjectId `bson:"_id"`
 }
 
-// New 新しいMongoPostを返す
+// NewPost 新しいMongoPostを返す
 func NewPost() MongoPost {
 	p := posts.New()
 	return MongoPost{
@@ -111,12 +111,14 @@ func (m *Mongo) GetUserByName(name string) (users.User, error) {
 }
 
 // GetAll はmongoの全川柳データを取得する
-func (m *Mongo) GetAll() (posts.Post), error) {
+func (m *Mongo) GetAll() (posts.Post, error) {
+	fmt.Println("getall")
 	s := m.Session.Copy()
 	defer s.Close()
 	c := s.DB("").C("posts")
 	mu := NewPost()
-	err := c.Find().One(&mu)
+	err := c.Find(nil).One(&mu)
+	fmt.Println(mu)
 	return mu.Post, err
 }
 

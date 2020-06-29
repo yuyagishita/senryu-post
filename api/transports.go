@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	"github.com/go-kit/kit/endpoint"
+	"github.com/yu-yagishita/senryu-post/posts"
 	"github.com/yu-yagishita/senryu-post/users"
 )
 
@@ -59,9 +60,10 @@ func MakeRegisterEndpoint(svc Service) endpoint.Endpoint {
 // MakeGetAllEndpoint は新規ユーザーを登録する
 func MakeGetAllEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
-		req := request.(getAllRequest)
+		fmt.Println("aaaaaaaaaaaaaaaaa")
+		// req := request.(getAllRequest)
 		p, err := svc.GetAll()
-		return postResponse{Post: p}, err
+		return getAllResponse{Post: p}, err
 	}
 }
 
@@ -95,6 +97,15 @@ func DecodeLoginRequest(_ context.Context, r *http.Request) (interface{}, error)
 // DecodeRegisterRequest はregisterのリクエストをデコードする
 func DecodeRegisterRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	var request registerRequest
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		return nil, err
+	}
+	return request, nil
+}
+
+// DecodeGetAllRequest はregisterのリクエストをデコードする
+func DecodeGetAllRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var request getAllRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return nil, err
 	}
@@ -159,4 +170,11 @@ type registerRequest struct {
 
 type postResponse struct {
 	ID string `json:"id"`
+}
+
+type getAllRequest struct {
+}
+
+type getAllResponse struct {
+	Post posts.Post `json:"post"`
 }
