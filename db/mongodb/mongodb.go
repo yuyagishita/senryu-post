@@ -18,7 +18,7 @@ var (
 	name     string
 	password string
 	host     string
-	db       = "users"
+	db       = "posts"
 	// ErrInvalidHexID は有効なbsonObjectIDではないエンティティIDを表している
 	ErrInvalidHexID = errors.New("Invalid Id Hex")
 )
