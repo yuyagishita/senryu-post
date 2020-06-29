@@ -1,11 +1,8 @@
 package posts
 
 import (
-	"crypto/sha1"
 	"errors"
 	"fmt"
-	"io"
-	"strconv"
 	"time"
 )
 
@@ -18,18 +15,19 @@ var (
 
 // Post は川柳情報
 type Post struct {
-	PostID string 
-	Kamigo string 
-	Nakashichi string 
-	Shimogo string 
-	UserID string
-	SignupAt string 
+	PostID     string
+	Kamigo     string
+	Nakashichi string
+	Shimogo    string
+	UserID     string
+	SignupAt   time.Time
 }
 
 // New は川柳データを作成する
 func New() Post {
 	p := Post{}
-	return u
+	p.SignupAt = time.Now()
+	return p
 }
 
 // Validate は入力フォームのバリデーションをする

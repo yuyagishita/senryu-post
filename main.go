@@ -67,7 +67,6 @@ func main() {
 
 	var svc api.Service
 	svc = api.NewFixedService()
-	// svc = proxyingMiddleware(context.Background(), *proxy, logger)(svc)
 	svc = api.LoggingMiddleware(logger)(svc)
 	svc = api.InstrumentingMiddleware(requestCount, requestLatency, countResult)(svc)
 
@@ -91,10 +90,16 @@ func main() {
 		api.DecodeRegisterRequest,
 		api.EncodeResponse,
 	)
+	getAllHandler := httptransport.NewServer(
+		api.MakeRegisterEndpoint(svc),
+		api.DecodeRegisterRequest,
+		api.EncodeResponse,
+	)
 	http.Handle("/uppercase", uppercaseHandler)
 	http.Handle("/count", countHandler)
 	http.Handle("/login", loginHandler)
 	http.Handle("/register", registerHandler)
+	http.Handle("/getAll/", getAllHandler)
 	http.Handle("/metrics", promhttp.Handler())
 	logger.Log("msg", "HTTP", "addr", *listen)
 	logger.Log("err", http.ListenAndServe(*listen, nil))

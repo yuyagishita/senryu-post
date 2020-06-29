@@ -9,6 +9,7 @@ import (
 
 	"github.com/yu-yagishita/senryu-post/db"
 	"github.com/yu-yagishita/senryu-post/users"
+	"github.com/yu-yagishita/senryu-post/posts"
 )
 
 var (
@@ -22,6 +23,7 @@ type Service interface {
 	Count(string) int
 	Login(username, password string) (users.User, error)
 	Register(username, email, password string) (string, error)
+	GetAll() (posts.Post, error)
 }
 
 // NewFixedService はfixedService{}を返す
@@ -52,7 +54,6 @@ func (s *fixedService) Login(username, password string) (users.User, error) {
 	}
 
 	return u, nil
-
 }
 
 func (s *fixedService) Register(username, email, password string) (string, error) {
@@ -62,6 +63,15 @@ func (s *fixedService) Register(username, email, password string) (string, error
 	u.Password = calculatePassHash(password, u.Salt)
 	err := db.CreateUser(&u)
 	return u.UserID, err
+}
+
+func (s *fixedService) GetAll() (posts.Post, error) {
+	p, err := db.GetAll()
+	if err != nil {
+		return posts.New(), err
+	}
+
+	return p, nil
 }
 
 // ErrEmpty は入力文字列が空の場合返す

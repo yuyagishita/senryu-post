@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/yu-yagishita/senryu-post/users"
+	"github.com/yu-yagishita/senryu-post/posts"
 
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -65,6 +66,20 @@ func New() MongoUser {
 	}
 }
 
+// MongoPost はPostのラッパー
+type MongoPost struct {
+	posts.Post `bson:",inline"`
+	ID         bson.ObjectId `bson:"_id"`
+}
+
+// New 新しいMongoPostを返す
+func NewPost() MongoPost {
+	p := posts.New()
+	return MongoPost{
+		Post: p,
+	}
+}
+
 // CreateUser はユーザーを作成してMongoに保存する
 func (m *Mongo) CreateUser(u *users.User) error {
 	s := m.Session.Copy()
@@ -93,6 +108,16 @@ func (m *Mongo) GetUserByName(name string) (users.User, error) {
 	mu := New()
 	err := c.Find(bson.M{"username": name}).One(&mu)
 	return mu.User, err
+}
+
+// GetAll はmongoの全川柳データを取得する
+func (m *Mongo) GetAll() (posts.Post), error) {
+	s := m.Session.Copy()
+	defer s.Close()
+	c := s.DB("").C("posts")
+	mu := NewPost()
+	err := c.Find().One(&mu)
+	return mu.Post, err
 }
 
 func getURL() url.URL {

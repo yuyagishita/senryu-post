@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/yu-yagishita/senryu-post/users"
+	"github.com/yu-yagishita/senryu-post/posts"
 )
 
 // Database 新しいシステムに簡単に切り替えることができるようにシンプルなインターフェースにしている
@@ -76,4 +77,13 @@ func GetUserByName(n string) (users.User, error) {
 	}
 	fmt.Println("end GetUserByName")
 	return u, err
+}
+
+// GetUserByName はDefaultDbメソッドを呼び出す
+func GetAll() (posts.Post, error) {
+	p, err := DefaultDb.GetAll()
+	if err == nil {
+		// u.AddLinks()
+	}
+	return p, err
 }

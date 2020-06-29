@@ -56,6 +56,15 @@ func MakeRegisterEndpoint(svc Service) endpoint.Endpoint {
 	}
 }
 
+// MakeGetAllEndpoint は新規ユーザーを登録する
+func MakeGetAllEndpoint(svc Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req := request.(getAllRequest)
+		p, err := svc.GetAll()
+		return postResponse{Post: p}, err
+	}
+}
+
 // DecodeUppercaseRequest はリクエストをデコードする
 func DecodeUppercaseRequest(_ context.Context, r *http.Request) (interface{}, error) {
 	var request uppercaseRequest
