@@ -44,7 +44,7 @@ func (m *Mongo) Init() error {
 	if err != nil {
 		return err
 	}
-	return m.EnsureIndexes()
+	return err
 }
 
 // MongoUser はUserのラッパー
@@ -100,19 +100,4 @@ func getURL() url.URL {
 		ur.User = u
 	}
 	return ur
-}
-
-// EnsureIndexes はusernameが一意であることを確認する
-func (m *Mongo) EnsureIndexes() error {
-	s := m.Session.Copy()
-	defer s.Close()
-	i := mgo.Index{
-		Key:        []string{"username"},
-		Unique:     true,
-		DropDups:   true,
-		Background: true,
-		Sparse:     false,
-	}
-	c := s.DB("").C("users")
-	return c.EnsureIndex(i)
 }
