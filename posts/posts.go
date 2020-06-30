@@ -15,11 +15,11 @@ var (
 
 // Post は川柳情報
 type Post struct {
-	PostID     string
-	Kamigo     string
-	Nakashichi string
-	Shimogo    string
-	UserID     string
+	PostID     string `json:"id" bson:"-"`
+	Kamigo     string `json:"kamigo" bson:"kamigo"`
+	Nakashichi string `json:"nakashichi" bson:"nakashichi"`
+	Shimogo    string `json:"shimogo" bson:"shimogo"`
+	UserID     string `json:"user_id" bson:"-"`
 	SignupAt   time.Time
 }
 

@@ -70,6 +70,7 @@ func New() MongoUser {
 type MongoPost struct {
 	posts.Post `bson:",inline"`
 	ID         bson.ObjectId `bson:"_id"`
+	UserID     bson.ObjectId `bson:"user_id"`
 }
 
 // NewPost 新しいMongoPostを返す
@@ -118,7 +119,9 @@ func (m *Mongo) GetAll() (posts.Post, error) {
 	c := s.DB("").C("posts")
 	mu := NewPost()
 	err := c.Find(nil).One(&mu)
-	fmt.Println(mu)
+	mu.Post.PostID = mu.ID.Hex()
+	mu.Post.UserID = mu.UserID.Hex()
+	fmt.Println(mu.Post)
 	return mu.Post, err
 }
 
