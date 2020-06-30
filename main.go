@@ -70,35 +70,12 @@ func main() {
 	svc = api.LoggingMiddleware(logger)(svc)
 	svc = api.InstrumentingMiddleware(requestCount, requestLatency, countResult)(svc)
 
-	uppercaseHandler := httptransport.NewServer(
-		api.MakeUppercaseEndpoint(svc),
-		api.DecodeUppercaseRequest,
-		api.EncodeResponse,
-	)
-	countHandler := httptransport.NewServer(
-		api.MakeCountEndpoint(svc),
-		api.DecodeCountRequest,
-		api.EncodeResponse,
-	)
-	loginHandler := httptransport.NewServer(
-		api.MakeLoginEndpoint(svc),
-		api.DecodeLoginRequest,
-		api.EncodeResponse,
-	)
-	registerHandler := httptransport.NewServer(
-		api.MakeRegisterEndpoint(svc),
-		api.DecodeRegisterRequest,
-		api.EncodeResponse,
-	)
 	getAllHandler := httptransport.NewServer(
 		api.MakeGetAllEndpoint(svc),
 		api.DecodeGetAllRequest,
 		api.EncodeResponse,
 	)
-	http.Handle("/uppercase", uppercaseHandler)
-	http.Handle("/count", countHandler)
-	http.Handle("/login", loginHandler)
-	http.Handle("/register", registerHandler)
+
 	http.Handle("/getAll", getAllHandler)
 	http.Handle("/metrics", promhttp.Handler())
 	logger.Log("msg", "HTTP", "addr", *listen)

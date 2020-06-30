@@ -25,9 +25,6 @@ var (
 )
 
 func init() {
-	fmt.Println("name:" + os.Getenv("MONGO_USER"))
-	fmt.Println("password:" + os.Getenv("MONGO_PASS"))
-	fmt.Println("host:" + os.Getenv("MONGO_HOST"))
 	flag.StringVar(&name, "mongo-user", os.Getenv("MONGO_USER"), "Mongo user")
 	flag.StringVar(&password, "mongo-password", os.Getenv("MONGO_PASS"), "Mongo password")
 	flag.StringVar(&host, "mongo-host", os.Getenv("MONGO_HOST"), "Mongo host")
@@ -41,9 +38,7 @@ type Mongo struct {
 
 // Init はMongoDBのInit処理
 func (m *Mongo) Init() error {
-	fmt.Println("MongoDB: Init")
 	u := getURL()
-	fmt.Println("u: " + u.String())
 	var err error
 	m.Session, err = mgo.DialWithTimeout(u.String(), time.Duration(5)*time.Second)
 	if err != nil {
@@ -81,39 +76,8 @@ func NewPost() MongoPost {
 	}
 }
 
-// CreateUser はユーザーを作成してMongoに保存する
-func (m *Mongo) CreateUser(u *users.User) error {
-	s := m.Session.Copy()
-	defer s.Close()
-	id := bson.NewObjectId()
-	mu := New()
-	mu.User = *u
-	mu.ID = id
-	c := s.DB("").C("users")
-	_, err := c.UpsertId(mu.ID, mu)
-	if err != nil {
-		return err
-	}
-	mu.User.UserID = mu.ID.Hex()
-	*u = mu.User
-	return nil
-}
-
-// GetUserByName はusernameでmongoのユーザーデータを取得する
-func (m *Mongo) GetUserByName(name string) (users.User, error) {
-	fmt.Println("mongodb: GetUserByName")
-	s := m.Session.Copy()
-	defer s.Close()
-	c := s.DB("").C("users")
-	fmt.Println("c.Name: " + c.Name)
-	mu := New()
-	err := c.Find(bson.M{"username": name}).One(&mu)
-	return mu.User, err
-}
-
 // GetAll はmongoの全川柳データを取得する
 func (m *Mongo) GetAll() (posts.Post, error) {
-	fmt.Println("getall")
 	s := m.Session.Copy()
 	defer s.Close()
 	c := s.DB("").C("posts")
