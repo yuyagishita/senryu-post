@@ -3,7 +3,6 @@ package posts
 import (
 	"errors"
 	"fmt"
-	"time"
 )
 
 var (
@@ -20,13 +19,13 @@ type Post struct {
 	Nakashichi string `json:"nakashichi" bson:"nakashichi"`
 	Shimogo    string `json:"shimogo" bson:"shimogo"`
 	UserID     string `json:"user_id" bson:"-"`
-	SignupAt   time.Time
+	SignupAt   string `json:"signup_at" bson:"-"`
 }
 
 // New は川柳データを作成する
 func New() Post {
 	p := Post{}
-	p.SignupAt = time.Now()
+	// p.SignupAt = time.Now()
 	return p
 }
 

@@ -3,13 +3,11 @@ package mongodb
 import (
 	"errors"
 	"flag"
-	"fmt"
 	"net/url"
 	"os"
 	"time"
 
 	"github.com/yu-yagishita/senryu-post/posts"
-	"github.com/yu-yagishita/senryu-post/users"
 
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
@@ -47,29 +45,16 @@ func (m *Mongo) Init() error {
 	return err
 }
 
-// MongoUser はUserのラッパー
-type MongoUser struct {
-	users.User `bson:",inline"`
-	ID         bson.ObjectId `bson:"_id"`
-}
-
-// New 新しいMongoUserを返す
-func New() MongoUser {
-	u := users.New()
-	return MongoUser{
-		User: u,
-	}
-}
-
 // MongoPost はPostのラッパー
 type MongoPost struct {
 	posts.Post `bson:",inline"`
 	ID         bson.ObjectId `bson:"_id"`
 	UserID     bson.ObjectId `bson:"user_id"`
+	SignupAt   time.Time     `bson:"signup_at"`
 }
 
-// NewPost 新しいMongoPostを返す
-func NewPost() MongoPost {
+// New 新しいMongoPostを返す
+func New() MongoPost {
 	p := posts.New()
 	return MongoPost{
 		Post: p,
@@ -81,11 +66,11 @@ func (m *Mongo) GetAll() (posts.Post, error) {
 	s := m.Session.Copy()
 	defer s.Close()
 	c := s.DB("").C("posts")
-	mu := NewPost()
+	mu := New()
 	err := c.Find(nil).One(&mu)
 	mu.Post.PostID = mu.ID.Hex()
 	mu.Post.UserID = mu.UserID.Hex()
-	fmt.Println(mu.Post)
+	mu.Post.SignupAt = mu.SignupAt.Format("2006-01-02")
 	return mu.Post, err
 }
 
