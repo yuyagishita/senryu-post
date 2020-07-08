@@ -76,7 +76,7 @@ func main() {
 		api.EncodeResponse,
 	)
 
-	http.Handle("/getAll", getAllHandler)
+	http.Handle("/get-all", getAllHandler)
 	http.Handle("/metrics", promhttp.Handler())
 	logger.Log("msg", "HTTP", "addr", *listen)
 	logger.Log("err", http.ListenAndServe(*listen, nil))
