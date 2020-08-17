@@ -51,9 +51,9 @@ listen=:8080 caller=logging.go:22 method=uppercase input=baz output=BAZ err=null
 ## 作成したAPIのテスト
 ローカル環境で`curl`でテストの仕方を以下に記載する。
 ```
-// ログイン
-curl -XPOST -d'{"username": "yagiyu", "password": "miran"}' localhost:8080/login
+// 全取得
+curl -XPOST -d'{}' localhost:8081/get-all
 
-// ユーザー登録
-curl -XPOST -d'{"username": "test", "email": "yagiyu.0725@gmail.com",  "password": "test"}' localhost:8080/register
+// 投稿
+curl -XPOST -d'{"kamigo": "テストだよ", "nakashichi": "この投稿は",  "shimogo": "テストだよ", "user_id": "57a98d98e4b00679b4a830af"}' localhost:8081/post
 ```

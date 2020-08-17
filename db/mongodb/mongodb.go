@@ -3,6 +3,7 @@ package mongodb
 import (
 	"errors"
 	"flag"
+	"fmt"
 	"net/url"
 	"os"
 	"time"
@@ -72,6 +73,25 @@ func (m *Mongo) GetAll() (posts.Post, error) {
 	mu.Post.UserID = mu.UserID.Hex()
 	mu.Post.SignupAt = mu.SignupAt.Format("2006-01-02")
 	return mu.Post, err
+}
+
+// CreatePost はユーザーを作成してMongoに保存する
+func (m *Mongo) CreatePost(p *posts.Post) error {
+	s := m.Session.Copy()
+	defer s.Close()
+	id := bson.NewObjectId()
+	mu := New()
+	fmt.Print(p)
+	mu.Post = *p
+	mu.ID = id
+	c := s.DB("").C("posts")
+	_, err := c.UpsertId(mu.ID, mu)
+	if err != nil {
+		return err
+	}
+	mu.Post.PostID = mu.ID.Hex()
+	*p = mu.Post
+	return nil
 }
 
 func getURL() url.URL {

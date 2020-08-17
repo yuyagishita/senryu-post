@@ -13,6 +13,7 @@ import (
 type Database interface {
 	Init() error
 	GetAll() (posts.Post, error)
+	CreatePost(*posts.Post) error
 }
 
 var (
@@ -64,4 +65,9 @@ func GetAll() (posts.Post, error) {
 		// u.AddLinks()
 	}
 	return p, err
+}
+
+// CreatePost はDefaultDbメソッドを呼び出す
+func CreatePost(p *posts.Post) error {
+	return DefaultDb.CreatePost(p)
 }

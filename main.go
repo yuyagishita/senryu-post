@@ -76,7 +76,14 @@ func main() {
 		api.EncodeResponse,
 	)
 
+	postHandler := httptransport.NewServer(
+		api.MakePostEndpoint(svc),
+		api.DecodePostRequest,
+		api.EncodeResponse,
+	)
+
 	http.Handle("/get-all", getAllHandler)
+	http.Handle("/post", postHandler)
 	http.Handle("/metrics", promhttp.Handler())
 	logger.Log("msg", "HTTP", "addr", *listen)
 	logger.Log("err", http.ListenAndServe(*listen, nil))

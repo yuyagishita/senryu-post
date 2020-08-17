@@ -15,6 +15,7 @@ var (
 // Service はAPIで提供している機能をまとめたインターフェース
 type Service interface {
 	GetAll() (posts.Post, error)
+	Register(kamigo, nakashichi, shimogo, userID string) (string, error)
 }
 
 // NewFixedService はfixedService{}を返す
@@ -31,6 +32,16 @@ func (s *fixedService) GetAll() (posts.Post, error) {
 	}
 
 	return p, nil
+}
+
+func (s *fixedService) Register(kamigo, nakashichi, shimogo, userID string) (string, error) {
+	p := posts.New()
+	p.Kamigo = kamigo
+	p.Nakashichi = nakashichi
+	p.Shimogo = shimogo
+	p.UserID = userID
+	err := db.CreatePost(&p)
+	return p.PostID, err
 }
 
 // ErrEmpty は入力文字列が空の場合返す
