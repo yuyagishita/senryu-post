@@ -67,12 +67,16 @@ func (m *Mongo) GetAll() (posts.Post, error) {
 	s := m.Session.Copy()
 	defer s.Close()
 	c := s.DB("").C("posts")
-	mu := New()
-	err := c.Find(nil).One(&mu)
-	mu.Post.PostID = mu.ID.Hex()
-	mu.Post.UserID = mu.UserID.Hex()
-	mu.Post.SignupAt = mu.SignupAt.Format("2006-01-02")
-	return mu.Post, err
+	mp := New()
+	var mps []MongoPost
+	err := c.Find(nil).All(&mps)
+	for i := 0; i < len(mps); i++ {
+		mps[i].Post.PostID = mps[i].ID.Hex()
+		mps[i].Post.UserID = mps[i].UserID.Hex()
+		mps[i].Post.SignupAt = mps[i].SignupAt.Format("2006-01-02")
+	}
+	fmt.Println(mps)
+	return mp.Post, err
 }
 
 // CreatePost はユーザーを作成してMongoに保存する
@@ -80,17 +84,17 @@ func (m *Mongo) CreatePost(p *posts.Post) error {
 	s := m.Session.Copy()
 	defer s.Close()
 	id := bson.NewObjectId()
-	mu := New()
-	fmt.Print(p)
-	// mu.Post = *p
-	mu.ID = id
-	mu.Kamigo = p.Kamigo
-	mu.Nakashichi = p.Nakashichi
-	mu.Shimogo = p.Shimogo
-	mu.UserID = bson.ObjectIdHex(p.UserID)
-	mu.SignupAt = time.Now()
+	mp := New()
+	mp.Post = *p
+	mp.ID = id
+	mp.Kamigo = p.Kamigo
+	mp.Nakashichi = p.Nakashichi
+	mp.Shimogo = p.Shimogo
+	mp.UserID = bson.ObjectIdHex(p.UserID)
+	mp.SignupAt = time.Now()
+	fmt.Println(mp)
 	c := s.DB("").C("posts")
-	err := c.Insert(mu)
+	err := c.Insert(mp)
 	if err != nil {
 		if mgo.IsDup(err) {
 			fmt.Printf("Duplicate key error \n")
@@ -101,8 +105,8 @@ func (m *Mongo) CreatePost(p *posts.Post) error {
 			fmt.Printf("%+v \n", err)
 		}
 	}
-	mu.Post.PostID = mu.ID.Hex()
-	*p = mu.Post
+	mp.Post.PostID = mp.ID.Hex()
+	*p = mp.Post
 	return nil
 }
 
