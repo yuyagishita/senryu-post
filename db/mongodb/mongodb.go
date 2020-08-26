@@ -82,12 +82,24 @@ func (m *Mongo) CreatePost(p *posts.Post) error {
 	id := bson.NewObjectId()
 	mu := New()
 	fmt.Print(p)
-	mu.Post = *p
+	// mu.Post = *p
 	mu.ID = id
+	mu.Kamigo = p.Kamigo
+	mu.Nakashichi = p.Nakashichi
+	mu.Shimogo = p.Shimogo
+	mu.UserID = bson.ObjectIdHex(p.UserID)
+	mu.SignupAt = time.Now()
 	c := s.DB("").C("posts")
-	_, err := c.UpsertId(mu.ID, mu)
+	err := c.Insert(mu)
 	if err != nil {
-		return err
+		if mgo.IsDup(err) {
+			fmt.Printf("Duplicate key error \n")
+		}
+		if v, ok := err.(*mgo.LastError); ok {
+			fmt.Printf("Code:%d N:%d UpdatedExisting:%t WTimeout:%t Waited:%d \n", v.Code, v.N, v.UpdatedExisting, v.WTimeout, v.Waited)
+		} else {
+			fmt.Printf("%+v \n", err)
+		}
 	}
 	mu.Post.PostID = mu.ID.Hex()
 	*p = mu.Post
