@@ -70,7 +70,7 @@ type getAllRequest struct {
 }
 
 type getAllResponse struct {
-	Post posts.Post `json:"post"`
+	Post []posts.Post `json:"posts"`
 }
 
 type postRequest struct {

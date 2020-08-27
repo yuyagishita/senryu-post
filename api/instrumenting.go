@@ -26,7 +26,7 @@ type instrmw struct {
 	Service
 }
 
-func (mw instrmw) GetAll() (post posts.Post, err error) {
+func (mw instrmw) GetAll() (post []posts.Post, err error) {
 	defer func(begin time.Time) {
 		lvs := []string{"method", "GetAll", "error", fmt.Sprint(err != nil)}
 		mw.requestCount.With(lvs...).Add(1)

@@ -63,11 +63,11 @@ func New() MongoPost {
 }
 
 // GetAll はmongoの全川柳データを取得する
-func (m *Mongo) GetAll() (posts.Post, error) {
+func (m *Mongo) GetAll() ([]posts.Post, error) {
 	s := m.Session.Copy()
 	defer s.Close()
 	c := s.DB("").C("posts")
-	mp := New()
+	// mp := New()
 	var mps []MongoPost
 	var pps []posts.Post
 	err := c.Find(nil).All(&mps)
@@ -79,7 +79,7 @@ func (m *Mongo) GetAll() (posts.Post, error) {
 	}
 	fmt.Println(pps)
 
-	return mp.Post, err
+	return pps, err
 }
 
 // CreatePost はユーザーを作成してMongoに保存する

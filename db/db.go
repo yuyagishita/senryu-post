@@ -12,7 +12,7 @@ import (
 // Database 新しいシステムに簡単に切り替えることができるようにシンプルなインターフェースにしている
 type Database interface {
 	Init() error
-	GetAll() (posts.Post, error)
+	GetAll() ([]posts.Post, error)
 	CreatePost(*posts.Post) error
 }
 
@@ -59,7 +59,7 @@ func Register(name string, db Database) {
 }
 
 // GetAll はDefaultDbメソッドを呼び出す
-func GetAll() (posts.Post, error) {
+func GetAll() ([]posts.Post, error) {
 	p, err := DefaultDb.GetAll()
 	if err == nil {
 		// u.AddLinks()

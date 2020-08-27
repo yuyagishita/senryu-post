@@ -19,7 +19,7 @@ type logmw struct {
 	Service
 }
 
-func (mw logmw) GetAll() (posts.Post, error) {
+func (mw logmw) GetAll() ([]posts.Post, error) {
 	defer func(begin time.Time) {
 		_ = mw.logger.Log(
 			"method", "GetAll",
