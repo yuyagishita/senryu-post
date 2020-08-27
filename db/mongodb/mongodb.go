@@ -69,13 +69,16 @@ func (m *Mongo) GetAll() (posts.Post, error) {
 	c := s.DB("").C("posts")
 	mp := New()
 	var mps []MongoPost
+	var pps []posts.Post
 	err := c.Find(nil).All(&mps)
 	for i := 0; i < len(mps); i++ {
 		mps[i].Post.PostID = mps[i].ID.Hex()
 		mps[i].Post.UserID = mps[i].UserID.Hex()
 		mps[i].Post.SignupAt = mps[i].SignupAt.Format("2006-01-02")
+		pps = append(pps, mps[i].Post)
 	}
-	fmt.Println(mps)
+	fmt.Println(pps)
+
 	return mp.Post, err
 }
 
