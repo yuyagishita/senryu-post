@@ -20,6 +20,16 @@ func MakeGetAllEndpoint(svc Service) endpoint.Endpoint {
 	}
 }
 
+// MakeGetEndpoint はユーザーIDに紐づくデータを取得する
+func MakeGetEndpoint(svc Service) endpoint.Endpoint {
+	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
+		req := request.(getRequest)
+		fmt.Println("req.userID: " + req.userID)
+		p, err := svc.Get(req.userID)
+		return getAllResponse{Post: p}, err
+	}
+}
+
 // MakePostEndpoint はデータを投稿する
 func MakePostEndpoint(svc Service) endpoint.Endpoint {
 	return func(ctx context.Context, request interface{}) (response interface{}, err error) {
@@ -39,6 +49,13 @@ func DecodeGetAllRequest(_ context.Context, r *http.Request) (interface{}, error
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		return nil, err
 	}
+	return request, nil
+}
+
+// DecodeGetAllRequest はregisterのリクエストをデコードする
+func DecodeGetRequest(_ context.Context, r *http.Request) (interface{}, error) {
+	var request getRequest
+	request.userID = r.URL.Path[len("/get/"):]
 	return request, nil
 }
 
@@ -70,6 +87,14 @@ type getAllRequest struct {
 }
 
 type getAllResponse struct {
+	Post []posts.Post `json:"posts"`
+}
+
+type getRequest struct {
+	userID string
+}
+
+type getResponse struct {
 	Post []posts.Post `json:"posts"`
 }
 

@@ -15,6 +15,7 @@ var (
 // Service はAPIで提供している機能をまとめたインターフェース
 type Service interface {
 	GetAll() ([]posts.Post, error)
+	Get(userID string) ([]posts.Post, error)
 	Register(kamigo, nakashichi, shimogo, userID string) (string, error)
 }
 
@@ -28,7 +29,16 @@ type fixedService struct{}
 func (s *fixedService) GetAll() ([]posts.Post, error) {
 	p, err := db.GetAll()
 	if err != nil {
-		// return posts.New(), err
+		return posts.News(), err
+	}
+
+	return p, nil
+}
+
+func (s *fixedService) Get(userID string) ([]posts.Post, error) {
+	p, err := db.Get(userID)
+	if err != nil {
+		return posts.News(), err
 	}
 
 	return p, nil

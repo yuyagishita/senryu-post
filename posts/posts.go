@@ -29,6 +29,12 @@ func New() Post {
 	return p
 }
 
+// News は川柳データの配列を作成する
+func News() []Post {
+	p := []Post{}
+	return p
+}
+
 // Validate は入力フォームのバリデーションをする
 func (p *Post) Validate() error {
 	if p.Kamigo == "" {

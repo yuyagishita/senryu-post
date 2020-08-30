@@ -82,6 +82,25 @@ func (m *Mongo) GetAll() ([]posts.Post, error) {
 	return pps, err
 }
 
+// Get はmongoのuserIDに紐づく川柳データを取得する
+func (m *Mongo) Get(userID string) ([]posts.Post, error) {
+	s := m.Session.Copy()
+	defer s.Close()
+	c := s.DB("").C("posts")
+	var mps []MongoPost
+	var pps []posts.Post
+	err := c.Find(bson.M{"user_id": bson.ObjectIdHex(userID)}).All(&mps)
+	for i := 0; i < len(mps); i++ {
+		mps[i].Post.PostID = mps[i].ID.Hex()
+		mps[i].Post.UserID = mps[i].UserID.Hex()
+		mps[i].Post.SignupAt = mps[i].SignupAt.Format("2006-01-02")
+		pps = append(pps, mps[i].Post)
+	}
+	fmt.Println(pps)
+
+	return pps, err
+}
+
 // CreatePost はユーザーを作成してMongoに保存する
 func (m *Mongo) CreatePost(p *posts.Post) error {
 	s := m.Session.Copy()

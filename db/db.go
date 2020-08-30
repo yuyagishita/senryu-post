@@ -13,6 +13,7 @@ import (
 type Database interface {
 	Init() error
 	GetAll() ([]posts.Post, error)
+	Get(userID string) ([]posts.Post, error)
 	CreatePost(*posts.Post) error
 }
 
@@ -61,9 +62,12 @@ func Register(name string, db Database) {
 // GetAll はDefaultDbメソッドを呼び出す
 func GetAll() ([]posts.Post, error) {
 	p, err := DefaultDb.GetAll()
-	if err == nil {
-		// u.AddLinks()
-	}
+	return p, err
+}
+
+// Get はDefaultDbメソッドを呼び出す
+func Get(userID string) ([]posts.Post, error) {
+	p, err := DefaultDb.Get(userID)
 	return p, err
 }
 
