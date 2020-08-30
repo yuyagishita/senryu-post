@@ -54,6 +54,9 @@ listen=:8080 caller=logging.go:22 method=uppercase input=baz output=BAZ err=null
 // 全取得
 curl -XPOST -d'{}' localhost:8081/get-all
 
+// ユーザーに紐づくデータ取得
+curl -XPOST -d'{}' localhost:8081/get/57a98d98e4b00679b4a830af
+
 // 投稿
 curl -XPOST -d'{"kamigo": "テストだよ", "nakashichi": "この投稿は",  "shimogo": "テストだよ", "user_id": "57a98d98e4b00679b4a830af"}' localhost:8081/post
 ```
