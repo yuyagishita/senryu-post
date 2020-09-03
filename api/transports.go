@@ -39,7 +39,7 @@ func MakePostEndpoint(svc Service) endpoint.Endpoint {
 		fmt.Println("req.Nakashichi: " + req.Shimogo)
 		fmt.Println("req.UserID: " + req.UserID)
 		id, err := svc.Register(req.Kamigo, req.Nakashichi, req.Shimogo, req.UserID)
-		return postResponse{ID: id}, err
+		return postResponse{PostID: id}, err
 	}
 }
 
@@ -102,9 +102,9 @@ type postRequest struct {
 	Kamigo     string `json:"kamigo"`
 	Nakashichi string `json:"nakashichi"`
 	Shimogo    string `json:"shimogo"`
-	UserID     string `json:"user_id"`
+	UserID     string `json:"userId"`
 }
 
 type postResponse struct {
-	ID string `json:"id"`
+	PostID string `json:"postId"`
 }

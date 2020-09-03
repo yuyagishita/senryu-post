@@ -14,12 +14,12 @@ var (
 
 // Post は川柳情報
 type Post struct {
-	PostID     string `json:"id" bson:"-"`
+	PostID     string `json:"postId" bson:"-"`
 	Kamigo     string `json:"kamigo" bson:"kamigo"`
 	Nakashichi string `json:"nakashichi" bson:"nakashichi"`
 	Shimogo    string `json:"shimogo" bson:"shimogo"`
-	UserID     string `json:"user_id" bson:"-"`
-	SignupAt   string `json:"signup_at" bson:"-"`
+	UserID     string `json:"userId" bson:"-"`
+	SignupAt   string `json:"signupAt" bson:"-"`
 }
 
 // New は川柳データを作成する
