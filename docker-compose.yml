@@ -3,6 +3,7 @@ version: '3'
 services:
     post:
         build: .
+        command: fresh -c .fresh.conf
         tty: true
         image: senryu/post
         hostname: post
