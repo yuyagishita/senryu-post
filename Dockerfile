@@ -17,4 +17,4 @@ RUN go get github.com/pilu/fresh
 
 RUN go mod download
 
-# CMD ["fresh", "-c", ".fresh.conf"]
+CMD ["fresh", "-c", ".fresh.conf"]
