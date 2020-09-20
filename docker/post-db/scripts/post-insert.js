@@ -11,7 +11,7 @@ insert_post({
     "kamigo": "運動会",
     "nakashichi": "抜くなその子は",
     "shimogo": "課長の子",
-    "user_id": ObjectId("57a98d98e4b00679b4a830af"),
+    "user_id": ObjectId("5f4e6054ee11cb011220ca4a"),
     "signup_at": ISODate("2020-06-27 18:00:00+09:00")
 });
 
